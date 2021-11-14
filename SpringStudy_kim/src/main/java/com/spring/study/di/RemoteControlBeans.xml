@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+		
+	<!-- @Value, @Autowired와 같은 @(annotation)들을 스캔해주고 찾아주는 역할  -->
+	<context:annotation-config></context:annotation-config>
+		
+	<!-- xml을 통해서 DI하는 방식
+			IOC 컨테이너 
+		 	Dto와 같다. 콩 하나가 객체 하나를 의미한다. /id = 인스턴스 변수명, class = class 파일의 위치
+	 		control1 인스턴스 명으로 객체 생성 / new 해준것과 마찬가지 
+	 -->
+	<bean id="c1" class="com.spring.study.di.AirConditionerRemoteControl">
+		<property name="company" value="LG"></property><!-- setter => @Value -->
+	</bean>
+	
+	<!-- control2 인스턴스 명으로 객체 생성 / new 해준것과 마찬가지 
+			class=" ... " 해당 객체가 인터페이스로 만들어져 있어야한다.
+			TvRemoteControl 는 RemoteControl 인터페이스를 implements 하고 있음
+	 -->
+	<bean id="c2" class="com.spring.study.di.TvRemoteControl">
+		<!-- 현재 @Value("LG") 초기값을 -> 삼성으로 바꿔준다. -->
+	 	<property name="company" value="삼성"></property> 
+	</bean>
+	
+	<bean id="c3" class="com.spring.study.di.TvRemoteControl">
+	 	<property name="company" value="LG"></property>
+	</bean>
+	
+	 
+ 	<bean id="CentralControl" class="com.spring.study.di.CentralControl">
+ 		<!-- 
+ 		main.java의 객체 생성 부분과 같다.
+		AirConditionerRemoteControl airConditionerRemoteControl = new AirConditionerRemoteControl();
+		TvRemoteControl tvRemoteControl1 = new TvRemoteControl();
+		TvRemoteControl tvRemoteControl2 = new TvRemoteControl();	
+		CentralControl centralControl = new CentralControl(tvRemoteControl1, tvRemoteControl2);
+ 	 
+ 		<constructor-arg name="control1" ref="control1"></constructor-arg>  생성자에다가 주입  / ref = reference
+ 		<constructor-arg name="control2" ref="contorl3"></constructor-arg>  ref => bean의 id 
+ 		-->
+	</bean>
+	
+
+</beans>

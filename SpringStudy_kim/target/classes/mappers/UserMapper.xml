@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper의 nameSpace명은 인터페이스의 명을 넣어준다. -->
+<mapper namespace="com.spring.study.model.dao.UserDao"> <!-- mapper의 이름, 인터페이스의 경로임 -->
+	<!-- id = 메서드명 - UserDaoImpl의 메서드명 
+			UserDto로 반환하기 때문에 resultType는 UserDto위치 
+			여러개의 select가 있을수 있다 그중에 id가 getUser인것
+			
+			select의 결과가 resyltType로 mapping되어 전달된다.
+			이때 전달되기 위해서는 UserDto의 변수명들이 column 명들과 같아야 한다.
+			
+			만약 UserDaoImpl에서 email이 아니라 객체로 전달이 되면 public UserDto getUser(UserDto dto)
+			parameterType을 지정해줘야 한다.
+			<select id="getUser" parameterType="com.spring.study.model.dto.UserDto" resultType="com.spring.study.model.dto.UserDto">
+			parameter로 전달받고 resultType로 리턴한다.
+			메서드로 표현하면 public UserDto getUser(parameterType의 UserDto)
+	-->
+	<select id="getUser" resultType="com.spring.study.model.dto.UserDto">
+		select
+			user_email,
+			user_password,
+			user_name,
+			user_phone
+		form
+			user_mst
+		where
+			user_email = #{email}
+	</select>
+	
+	<select id="login" parameterType="com.spring.study.model.dto.UserDto" resultType="Integer">
+	<!-- = public int login(UserDto userDto)   -->
+		select
+			count(um.user_email) + count(ud.user_email) as result
+		from
+			user_mst um
+			left outer join user_mst ud on(ud.user_email = um.user_email and ud.user_password = #{user_password})
+		where
+			um.user_email = #{user_email}
+	</select>
+	
+	<select id="idCheck" resultType="Integer">
+		select
+			count(user_email) as result
+		from
+			user_mst
+		where
+			user_email = #{user_email}
+	</select>
+	
+	<insert id="signUp" parameterType="com.spring.study.model.dto.UserDto">
+		insert into
+			user_mst
+		values(
+			#{user_email},
+			#{user_password},
+			#{user_name},
+			#{user_phone},
+			now(),
+			now()
+		)
+	</insert>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
